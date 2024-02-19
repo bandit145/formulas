@@ -1,0 +1,7 @@
+---
+packages:
+  - epel-release
+  - vim
+  - emacs
+  - nano
+  - policycoreutils-python-utils

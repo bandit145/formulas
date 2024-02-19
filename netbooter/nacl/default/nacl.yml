@@ -1,0 +1,18 @@
+---
+
+provider:
+  name: vagrant
+  provider:
+    name: virtualbox
+formula: netbooter
+scenario: default
+verifier: testinfra
+
+grains:
+  box1:
+    roles: 
+      - web
+
+instances:
+  - name: instance
+    box: generic/centos9s
