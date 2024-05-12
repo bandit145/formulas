@@ -26,7 +26,8 @@ root_ssh_keys:
 ensure_base_packages:
   pkg.installed:
     - pkgs: {{ defaults.packages + pillar['baseos_packages'] | default([]) }}
-    - order: 6
+    - require:
+        - /etc/yum.repos.d/repos.repo
 
 /etc/ssh/sshd_config.d/60-baseos.conf:
   file.managed:
