@@ -1,12 +1,3 @@
-netbooter_packages:
-  pkg.installed:
-    - pkgs:
-        - tftp-server
-        - syslinux-tftpboot
-        - nginx
-        - kea
-    - order: 1
-
 {% for file in salt['file.find']('/tftpboot/', mindepth=1) %}
 {{ file }}:
   file.managed:

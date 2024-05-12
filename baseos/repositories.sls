@@ -1,7 +1,8 @@
 {% for file in salt['file.find']('/etc/yum.repos.d/', mindepth=1, iname="*.repo") %}
 {% if file.split('/')[-1] != "repos.repo" %}
 {{ file }}:
-  file.absent
+  file.absent:
+    - order: 4
 {% endif %}
 {% endfor %}
 
@@ -12,4 +13,5 @@
     - group: root
     - mode: "0644"
     - template: jinja
+    - order: 5
 
