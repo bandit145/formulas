@@ -1,0 +1,17 @@
+{% for repo in pillar['baseos_repositories'] %}
+[{{ repo.id }}]
+name={{ repo.name }}
+{%- if "metalink" in repo %}
+metalink={{ repo.metalink }}
+{%- else %}
+baseurl={{ repo.baseurl }}
+{% endif %}
+{% if "gpgkey" in repo %}
+gpgkey={{ repo.gpgkey }}
+gpgcheck={{ repo.gpgcheck | default("1") }}
+repo_gpgcheck={{ repo.repo_gpgcheck | default("1") }}
+{% endif %}
+metadata_expire={{ repo.metadata_expire }}
+countme={{ repo.countme | default("0") }}
+enabled={{ repo.enabled | default("1") }}
+{% endfor %}

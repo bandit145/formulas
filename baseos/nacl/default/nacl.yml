@@ -7,7 +7,12 @@ provider:
 formula: baseos
 scenario: default
 verifier: testinfra
-
+phases:
+  - destroy
+  - create
+  - converge
+  - verify
+salt_exec_mode: salt-ssh
 grains:
   box1:
     roles: 

@@ -1,5 +1,7 @@
+{% import_yaml tpldir+"/defaults.yaml" as defaults %}
 include:
-  - .interfaces
+  - .networking
+  - .repositories
 {% if 'baseos_root_password_hash' in pillar %}
 root:
   user.present:
@@ -17,27 +19,17 @@ root_ssh_keys:
 {% endif %}
 
 {% if grains['nodename'] != pillar['baseos_hostname'] %}
-'hostnamectl set-hostname {{ pillar['baseos_hostname'] }}':
+"hostnamectl set-hostname {{ pillar['baseos_hostname'] }}":
   cmd.run
 {% endif %}
 
 ensure_base_packages:
   pkg.installed:
-    - pkgs:
-        - epel-release
-        - systemd-resolved
-        - vim-enhanced
-        - emacs
-        - nano
-        - screen
-        - tmux
-        - htop
-        - bcc-tools
-        - policycoreutils-python-utils
+    - pkgs: {{ defaults.packages + pillar['baseos_packages'] | default([]) }} 
 
-/etc/ssh/ssh_config.d/60-baseos.conf:
+/etc/ssh/sshd_config.d/60-baseos.conf:
   file.managed:
-    - source: salt://baseos/files/60-baseos.conf
+    - source: salt://{{ tpldir }}/files/60-baseos.conf
     - user: root
     - group: root
     - mode: 0644
@@ -45,12 +37,13 @@ ensure_base_packages:
 restart_sshd_if_changes:
   service.running:
     - name: sshd.service
+    - reload: true
     - watch:
-        - /etc/ssh/ssh_config.d/60-baseos.conf
+        - /etc/ssh/sshd_config.d/60-baseos.conf
 
 /etc/systemd/resolved.conf:
   file.managed:
-    - source: salt://baseos/files/resolved.conf
+    - source: salt://{{ tpldir }}/files/resolved.conf
     - user: root
     - group: root
     - mode: 0644
@@ -59,5 +52,6 @@ restart_sshd_if_changes:
 systemd-resolved.service:
   service.running:
     - enable: true
+    - reload: true
     - watch:
         - /etc/systemd/resolved.conf

@@ -7,6 +7,7 @@ provider:
 formula: netbooter
 scenario: default
 verifier: testinfra
+salt_exec_mode: "salt-ssh"
 
 grains:
   box1:
