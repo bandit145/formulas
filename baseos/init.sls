@@ -18,7 +18,7 @@ root_ssh_keys:
   cmd.run
 {% endif %}
 
-{% pillar['baseos_hostname'] is defined and if grains['nodename'] != pillar['baseos_hostname'] %}
+{% if pillar['baseos_hostname'] is defined and grains['nodename'] != pillar['baseos_hostname'] %}
 "hostnamectl set-hostname {{ pillar['baseos_hostname'] }}":
   cmd.run
 {% endif %}
