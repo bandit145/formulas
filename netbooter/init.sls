@@ -19,6 +19,14 @@
     - require:
         - /usr/share/nginx/html/netboot
 
+/usr/share/nginx/html/netboot/os:
+  file.directory:
+    - user: nginx
+    - group: nginx
+    - mode: 0775
+    - require:
+        - /usr/share/nginx/html/netboot
+
 /etc/nginx/nginx.conf:
   file.managed:
     - source: salt://{{ tpldir }}/files/nginx.conf
