@@ -1,4 +1,4 @@
-{% for repo in pillar['baseos_repositories'] %}
+{% for repo in pillar['baseos_repositories'] | default([]) %}
 [{{ repo.id }}]
 name={{ repo.name }}
 {%- if "metalink" in repo %}
