@@ -51,11 +51,19 @@ kea-ctrl-agent.service:
   service.running:
     - enable: true
 
+/var/lib/tftpboot:
+  file.directory:
+    - user: root
+    - group: root
+    - mode: 0644
+
 /var/lib/tftpboot/pxelinux.cfg:
   file.directory:
     - user: root
     - group: root
     - mode: 0644
+    - require:
+        - /var/lib/tftpboot
 
 {% for instance in pillar['netbooter_instances'] | default([]) %}
 /var/lib/tftpboot/pxelinux.cfg/{{ instance['mac'].lower() | replace(':', '-') }}-1e:
