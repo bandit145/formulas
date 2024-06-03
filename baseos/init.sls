@@ -2,7 +2,7 @@
 include:
   - .networking
   - .repositories
-{% if base_os_anycast | default(false) %}
+{% if baseos_anycast | default(false) %}
   - .anycast
 {% endif %}
 
