@@ -2,7 +2,7 @@
 include:
   - .networking
   - .repositories
-{% if baseos_anycast | default(false) %}
+{% if pillar['baseos_anycast'] | default(false) %}
   - .anycast
 {% endif %}
 
