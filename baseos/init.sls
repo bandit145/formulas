@@ -2,6 +2,10 @@
 include:
   - .networking
   - .repositories
+{% if base_os_anycast | default(false) %}
+  - .anycast
+{% endif %}
+
 {% if 'baseos_root_password_hash' in pillar %}
 root:
   user.present:
