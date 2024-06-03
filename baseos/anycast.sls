@@ -15,7 +15,7 @@
     - defaults:
         machine_id: {{ grains['machine_id'] }}
         hostname: {{ pillar['baseos_hostname'] }}
-	anycast_interface: {{ pillar['baseos_anycast_interface'] }}
+        anycast_interface: {{ pillar['baseos_anycast_interface'] }}
 
 frr.service:
   service.running:
