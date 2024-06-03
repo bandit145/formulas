@@ -14,7 +14,7 @@
     - template: jinja
     - defaults:
         machine_id: {{ grains['machine_id'] }}
-	hostname: {{ pillar['baseos_hostname'] }}
+        hostname: {{ pillar['baseos_hostname'] }}
 
 frr.service:
   service.running:
@@ -22,4 +22,4 @@ frr.service:
     - reload: true
     - watch:
         - /etc/frr/frr.conf
-	- /etc/frr/daemons
+        - /etc/frr/daemons
