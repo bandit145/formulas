@@ -15,6 +15,7 @@
     - defaults:
         machine_id: {{ grains['machine_id'] }}
 	hostname: {{ base_os_hostname }}
+
 frr.service:
   service.running:
     - enable: true
