@@ -14,7 +14,7 @@
     - template: jinja
     - defaults:
         machine_id: {{ grains['machine_id'] }}
-	hostname: {{ base_os_hostname }}
+	hostname: {{ baseos_hostname }}
 
 frr.service:
   service.running:
