@@ -1,0 +1,44 @@
+---
+
+provider:
+  name: docker
+formula: megaedge
+scenario: default
+verifier: testinfra
+salt_exec_mode: salt-master
+master_config: {}
+grains: {}
+instances:
+  - name: instance
+    image: "salt-minion:3006"
+    docker_options:
+      sysctls:
+        "net.ipv6.conf.all.forwarding": "1"
+        "net.ipv4.conf.all.forwarding": "1"
+      cap_add:
+        - "NET_ADMIN"
+        - "NET_RAW"
+        - "SYS_ADMIN"
+  - name: customer1
+    image: "salt-minion:3006"
+    converge: false
+    docker_options:
+      sysctls:
+        "net.ipv6.conf.all.forwarding": "1"
+        "net.ipv4.conf.all.forwarding": "1"
+      cap_add:
+        - "NET_ADMIN"
+        - "NET_RAW"
+        - "SYS_ADMIN"
+  - name: customer2
+    image: "salt-minion:3006"
+    converge: false
+    docker_options:
+      sysctls:
+        "net.ipv6.conf.all.forwarding": "1"
+        "net.ipv4.conf.all.forwarding": "1"
+      cap_add:
+        - "NET_ADMIN"
+        - "NET_RAW"
+        - "SYS_ADMIN"
+

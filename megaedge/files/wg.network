@@ -1,0 +1,5 @@
+[Match]
+Name={{ customer_name }}
+
+[Network]
+Address=fe80:{{ (customer_asn | string)[0:4] }}:{{ (customer_asn | string)[4:8] }}:{{ (customer_asn | string)[8:10] }}ff::1/56

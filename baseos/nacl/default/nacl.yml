@@ -13,6 +13,7 @@ phases:
   - converge
   - verify
 salt_exec_mode: salt-ssh
+master_config: {}
 grains:
   box1:
     roles: 

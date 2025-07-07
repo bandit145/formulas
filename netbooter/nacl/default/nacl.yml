@@ -1,13 +1,12 @@
 ---
 
 provider:
-  name: vagrant
-  provider:
-    name: virtualbox
+  name: docker
 formula: netbooter
 scenario: default
 verifier: testinfra
-salt_exec_mode: "salt-ssh"
+salt_exec_mode: "salt-master"
+master_config: {}
 
 grains:
   box1:
@@ -16,4 +15,4 @@ grains:
 
 instances:
   - name: instance
-    box: generic/centos9s
+    image: "salt-minion:3006"
