@@ -3,7 +3,7 @@ Name={{ customer_name }}
 Kind=wireguard
 [WireGuard]
 PrivateKeyFile={{ private_key_file }}
-{% if peer_public_key is defined %}
+{% if peer_public_key != '' %}
 [WireGuardPeer]
 PublicKey={{ peer_public_key }}
 AllowedIPs=fe80:{{ (customer_asn | string)[0:4] }}:{{ (customer_asn | string)[4:8] }}:{{ (customer_asn | string)[8:10] }}ff::/56,{{ customer_v6_subnet }}

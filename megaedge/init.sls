@@ -21,6 +21,7 @@
         customer_asn: {{ customer.asn }}
         private_key_file: /etc/pki/customers/{{ customer.asn }}
         customer_v6_subnet: {{ customer.subnet }}
+        peer_public_key: {{ customer.peer_public_key | default('') }}
 
 /etc/systemd/network/{{ customer.asn }}.network:
   file.managed:

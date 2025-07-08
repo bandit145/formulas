@@ -7,7 +7,14 @@ scenario: default
 verifier: testinfra
 salt_exec_mode: salt-master
 master_config: {}
-grains: {}
+grains:
+  customer1:
+    wg_priv_key: "UIclD278azwUnVYOKPBXPi+WN+9Ybp8m990KyByctVQ="
+    wg_pub_key: "xU37/E4sUqR94G4ic62XOLzhIVb0e6HmuPTrA41D12Y="
+  customer2:
+    wg_priv_key: "ALrMApZBcrZPYgwhio8wUSxP98sswsHDqtu0ArNq/nE="
+    wg_pub_key: "CzTEbcx7TOQ+dRypSliKDGi2PyEHdo1uTXDO8MpvMm0="
+
 instances:
   - name: instance
     image: "salt-minion:3006"
