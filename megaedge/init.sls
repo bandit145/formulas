@@ -4,7 +4,10 @@
     - group: root
     - dir_mode: 0755
 
-{% for customer in pillar.customers %}
+{% set wg_files = salt['file.find']('/etc/systemd/network/', regex='\d{10}\.netdev') %}
+{% set customer_asns = pillar.customers | default([]) | json_query('[].to_string(asn)') %}
+
+{% for customer in pillar.customers | default ([]) %}
 {{ customer.asn }}_wg_gen_key:
   cmd.run:
     - name: "wg genkey | tee /etc/pki/customers/{{ customer.asn }} | wg pubkey | tee /etc/pki/customers/{{ customer.asn }}.pub && chmod 0660 /etc/pki/customers/{{ customer.asn }} && chown root:systemd-network /etc/pki/customers/{{ customer.asn }}"
@@ -15,6 +18,9 @@
 /etc/systemd/network/{{ customer.asn }}.netdev:
   file.managed:
     - source: salt://{{ tpldir }}/files/wg.netdev
+    - user: root
+    - group: root
+    - mode: 0644
     - template: jinja
     - context:
         customer_name: {{ customer.name }}
@@ -26,12 +32,39 @@
 /etc/systemd/network/{{ customer.asn }}.network:
   file.managed:
     - source: salt://{{ tpldir }}/files/wg.network
+    - user: root
+    - group: root
+    - mode: 0644
     - template: jinja
     - context:
         customer_name: {{ customer.name }}
         customer_asn: {{ customer.asn }}
     - require:
         - /etc/systemd/network/{{ customer.asn }}.netdev
+
+{% endfor %}
+
+{% for remove_file in wg_files %}
+{% set asn = remove_file.split('/')[-1].split('.')[0] %}
+
+{% if asn not in customer_asns %}
+remove_/etc/systemd/network/{{ asn }}.netdev:
+  file.absent:
+    - name: /etc/systemd/network/{{ asn }}.netdev
+
+remove_/etc/systemd/network/{{ asn }}.network:
+  file.absent:
+    - name: /etc/systemd/network/{{ asn }}.network
+
+remove_/etc/pki/customers/{{ asn }}.pub:
+  file.absent:
+    - name: /etc/pki/customers/{{ asn }}.pub
+
+remove_/etc/pki/customers/{{ asn }}:
+  file.absent:
+    - name: /etc/pki/customers/{{ asn }}
+
+{% endif %}
 
 {% endfor %}
 
