@@ -1,17 +1,25 @@
-{% for repo in pillar['baseos_repositories'] | default([]) %}
-[{{ repo.id }}]
+{% do repos.update(pillar['baseos_repos'] | default({})) %}
+{% for name, repo in repos.items() %}
+[{{ name }}]
 name={{ repo.name }}
-{%- if "metalink" in repo %}
+{% if "metalink" in repo %}
 metalink={{ repo.metalink }}
-{%- else %}
+{% else %}
 baseurl={{ repo.baseurl }}
 {% endif %}
-{% if "gpgkey" in repo %}
 gpgkey={{ repo.gpgkey }}
 gpgcheck={{ repo.gpgcheck | default("1") }}
-repo_gpgcheck={{ repo.repo_gpgcheck | default("1") }}
-{% endif %}
-metadata_expire={{ repo.metadata_expire }}
-countme={{ repo.countme | default("0") }}
 enabled={{ repo.enabled | default("1") }}
+repo_gpgcheck={{ repo.gpg_check | default("0") }}
+metadata_expire={{ repo.metadata_expire | default("6h") }}
+countme={{ repo.countme | default("0") }}
+{% if "enabled_metadata" in repo %}
+enabled_metadata=repo.enabled_metadata
+{% endif %}
+{% if "exclude" in repo %}
+exclude=repo.exclude
+{% endif %}
+{% if "priority" in repo %}
+priority=repo.priority
+{% endif %}
 {% endfor %}

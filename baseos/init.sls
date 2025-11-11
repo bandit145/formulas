@@ -1,10 +1,6 @@
 {% import_yaml tpldir+"/defaults.yaml" as defaults %}
 include:
   - .networking
-  - .repositories
-{% if pillar['baseos_anycast'] | default(false) %}
-  - .anycast
-{% endif %}
 
 {% if 'baseos_root_password_hash' in pillar %}
 root:
@@ -17,6 +13,45 @@ root_ssh_keys:
     - user: root
     - ssh_keys: {{ pillar['baseos_root_ssh_keys'] | default([]) }}
 
+{% for key, value in (pillar['baseos_sysctls'] | default({})).items() %}
+{{ key }}:
+  sysctl.present:
+    - value: {{ value }}
+{% endfor %}
+
+/etc/yum.repos.d/repos.repo:
+  file.managed:
+    - source: salt://{{ tpldir }}/files/repos.repo
+    - user: root
+    - group: root
+    - mode: 0644
+    - template: jinja
+    - context:
+       repos: {{ defaults["baseos_repos"] }}
+
+/etc/yum.repos.d:
+  file.directory:
+    - mode: 0755
+    - user: root
+    - group: root
+    - clean: true
+    - require:
+        - file: /etc/yum.repos.d/repos.repo
+
+lock_packages:
+  pkg.held:
+    - pkgs: {{ defaults["baseos_version_lock"] + pillar["baseos_version_lock"] | default([]) }}
+    - replace: True
+    - require:
+        - /etc/yum.repos.d
+
+install_packages:
+  pkg.installed:
+    - pkgs: {{ defaults["baseos_packages"] + pillar["baseos_packages"] | default([]) }}
+    - require:
+        - lock_packages
+
+
 {% if grains['locale_info']['timezone'].lower() != "utc" %}
 'timedatectl set-timezone UTC':
   cmd.run
@@ -27,11 +62,7 @@ root_ssh_keys:
   cmd.run
 {% endif %}
 
-ensure_base_packages:
-  pkg.installed:
-    - pkgs: {{ defaults.packages + pillar['baseos_packages'] | default([]) }}
-    - require:
-        - /etc/yum.repos.d/repos.repo
+
 
 /etc/ssh/sshd_config.d/60-baseos.conf:
   file.managed:
@@ -39,6 +70,15 @@ ensure_base_packages:
     - user: root
     - group: root
     - mode: 0644
+
+/etc/ssh/sshd_config.d:
+  file.directory:
+    - user: root
+    - group: root
+    - mode: 0755
+    - clear: True
+    - require:
+        - file: /etc/ssh/sshd_config.d/60-baseos.conf
 
 restart_sshd_if_changes:
   service.running:

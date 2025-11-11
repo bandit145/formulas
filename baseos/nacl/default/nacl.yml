@@ -1,9 +1,7 @@
 ---
 
 provider:
-  name: vagrant
-  provider:
-    name: virtualbox
+  name: docker
 formula: baseos
 scenario: default
 verifier: testinfra
@@ -12,7 +10,7 @@ phases:
   - create
   - converge
   - verify
-salt_exec_mode: salt-ssh
+salt_exec_mode: salt-master
 master_config: {}
 grains:
   box1:
@@ -21,4 +19,9 @@ grains:
 
 instances:
   - name: instance
-    box: generic/centos9s
+    image: "salt-minion:3006"
+    docker_options:
+      cap_add:
+        - "NET_RAW"
+        - "NET_ADMIN"
+        - "SYS_aDMIN"

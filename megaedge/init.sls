@@ -48,6 +48,7 @@
 {% set asn = remove_file.split('/')[-1].split('.')[0] %}
 
 {% if asn not in customer_asns %}
+{% set remove = true %}
 remove_/etc/systemd/network/{{ asn }}.netdev:
   file.absent:
     - name: /etc/systemd/network/{{ asn }}.netdev
@@ -69,9 +70,16 @@ remove_/etc/pki/customers/{{ asn }}:
 {% endfor %}
 
 systemd-networkd.service:
-  module.run:
+  module.wait:
     - name: service.reload
     - m_name: systemd-networkd.service
+{% if pillar.customers | default([]) != [] %}
+    - watch:
+{% if remove is defined %}
+        - file: remove_/etc/systemd/network/*
+{% endif %}
+        - file: /etc/systemd/network/*
+{% endif %}
 
 /etc/frr/frr.conf:
   file.managed:

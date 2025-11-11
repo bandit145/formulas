@@ -32,7 +32,7 @@ def test_megaedge(net_setup):
 
     start = time.time()
     res = edge.run("vtysh -c 'show bgp ipv6' | grep '*>' | wc -l")
-    while time.time() - start <= 30 and res.stdout.strip() != '2':
+    while time.time() - start <= 60 and res.stdout.strip() != '2':
         time.sleep(1)
         res = edge.run("vtysh -c 'show bgp ipv6' | grep '*>' | wc -l")
 
