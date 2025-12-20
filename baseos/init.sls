@@ -29,29 +29,6 @@ root_ssh_keys:
     - context:
        repos: {{ defaults["baseos_repos"] }}
 
-/etc/yum.repos.d:
-  file.directory:
-    - mode: 0755
-    - user: root
-    - group: root
-    - clean: true
-    - require:
-        - file: /etc/yum.repos.d/repos.repo
-
-lock_packages:
-  pkg.held:
-    - pkgs: {{ defaults["baseos_version_lock"] + pillar["baseos_version_lock"] | default([]) }}
-    - replace: True
-    - require:
-        - /etc/yum.repos.d
-
-install_packages:
-  pkg.installed:
-    - pkgs: {{ defaults["baseos_packages"] + pillar["baseos_packages"] | default([]) }}
-    - require:
-        - lock_packages
-
-
 {% if grains['locale_info']['timezone'].lower() != "utc" %}
 'timedatectl set-timezone UTC':
   cmd.run
@@ -61,8 +38,6 @@ install_packages:
 "hostnamectl set-hostname {{ pillar['baseos_hostname'] }}":
   cmd.run
 {% endif %}
-
-
 
 /etc/ssh/sshd_config.d/60-baseos.conf:
   file.managed:
