@@ -1,3 +1,79 @@
 ---
 
+baseos_repos:
+  baseos:
+    name: CentOS Stream $releasever - BaseOS
+    metalink: https://mirrors.centos.org/metalink?repo=centos-baseos-$stream&arch=$basearch&protocol=https,http
+    gpgcheck: "1"
+    gpgkey: "file:///etc/pki/rpm-gpg/RPM-GPG-KEY-centosofficial"
+    repo_gpgcheck: "0"
+    countme: "1"
+    enabled: "1"
+  appstream:
+    name: CentOS Stream $releasever - AppStream
+    metalink: https://mirrors.centos.org/metalink?repo=centos-appstream-$stream&arch=$basearch&protocol=https,http
+    gpgcheck: "1"
+    gpgkey: "file:///etc/pki/rpm-gpg/RPM-GPG-KEY-centosofficial"
+    repo_gpgcheck: "0"
+    countme: "1"
+    enabled: "1"
+  crb:
+    name: CentOS Stream $releasever - CRB
+    metalink: https://mirrors.centos.org/metalink?repo=centos-crb-$stream&arch=$basearch&protocol=https,http
+    gpgcheck: "1"
+    gpgkey: "file:///etc/pki/rpm-gpg/RPM-GPG-KEY-centosofficial"
+    repo_gpgcheck: "0"
+    countme: "1"
+    enabled: "1"
+  centos-hyperscale:
+    name: CentOS Stream $releasever - Hyperscale
+    metalink: https://mirrors.centos.org/metalink?repo=centos-hyperscale-sig-packages-main-$stream&arch=$basearch&protocol=https,http
+    gpgcheck: "1"
+    gpgkey: "file:///etc/pki/rpm-gpg/RPM-GPG-KEY-CentOS-SIG-HyperScale"
+    repo_gpgcheck: "0"
+    priority: "50"
+    countme: "1"
+    enabled: "1"
+  epel:
+    name: Extra Packages for Enterprise Linux 9 - $basearch
+    metalink: https://mirrors.fedoraproject.org/metalink?repo=epel-9&arch=$basearch&infra=$infra&content=$contetdir
+    enabled: "1"
+    gpgcheck: "1"
+    countme: "1"
+    gpgkey: "file:///etc/pki/rpm-gpg/RPM-GPG-KEY-EPEL-9"
+  epel-next:
+    name: Extra Packages for Enterprise Linux 9 - Next - $basearch
+    metalink: https://mirrors.fedoraproject.org/metalink?repo=epel-next-9&arch=$basearch&infra=$infra&content=$contetdir
+    enabled: "1"
+    gpgcheck: "1"
+    countme: "1"
+    gpgkey: "file:///etc/pki/rpm-gpg/RPM-GPG-KEY-EPEL-9"
+  salt-3006-lts:
+    name: Salt Repo for Salt v3006 LTS
+    baseurl: https://packages.broadcom.com/artifactory/saltproject-rpm/
+    priority: "10"
+    enabled: "1"
+    enabled_metadata: "1"
+    gpgcheck: "1"
+    exclude: "*3007* *3008* *3009* *3010*"
+    gpgkey: "https://packages.broadcom.com/artifactory/api/security/keypair/SaltProjectKey/public"
 
+baseos_version_lock: []
+
+baseos_packages:
+  - htop
+  - procps-ng
+  - sysstat
+  - tcpdump
+  - conntrack-tools
+  - bcc-tools
+  - systemd-resolved
+  - screen
+  - tmux
+  - vim-enhanced
+  - libsemanage
+  - python3-dnf-plugin-versionlock
+  - python3-dnf-plugin-post-transaction-actions
+  - python3-setools
+  - python3-dns
+  - policycoreutils-python-utils

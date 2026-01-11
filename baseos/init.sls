@@ -1,6 +1,9 @@
 {% import_yaml tpldir+"/defaults.yaml" as defaults %}
 include:
   - .networking
+{% if 'bootc_managed' not in grains %}
+  - .packages
+{% endif %}
 
 {% if 'baseos_root_password_hash' in pillar %}
 root:
@@ -19,15 +22,6 @@ root_ssh_keys:
     - value: {{ value }}
 {% endfor %}
 
-/etc/yum.repos.d/repos.repo:
-  file.managed:
-    - source: salt://{{ tpldir }}/files/repos.repo
-    - user: root
-    - group: root
-    - mode: 0644
-    - template: jinja
-    - context:
-       repos: {{ defaults["baseos_repos"] }}
 
 {% if grains['locale_info']['timezone'].lower() != "utc" %}
 'timedatectl set-timezone UTC':
